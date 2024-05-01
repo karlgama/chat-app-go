@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/websocket"
+	"github.com/karlgama/chat-app-go.git/infra/rest/routes"
 )
 
 var upgrader = websocket.Upgrader{
@@ -44,7 +45,7 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 	reader(ws)
 }
 
-func setupRoutes() {
+func setupRoutesWS() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Simple server")
 	})
@@ -70,6 +71,5 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	fmt.Println("Chat App v0.01")
-	setupRoutes()
-	http.ListenAndServe(":8080", nil)
+	routes.SetupRoutes()
 }
