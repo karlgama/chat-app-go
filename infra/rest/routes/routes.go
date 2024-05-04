@@ -1,9 +1,13 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 func SetupRoutes() {
+
 	r := gin.Default()
-	HandleUserRequest(r)
+	HandleUserRequests(r)
+	HandleAuthRequests(r)
 	r.Run(":8080")
 }

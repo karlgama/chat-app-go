@@ -5,11 +5,11 @@ import (
 	"github.com/karlgama/chat-app-go.git/infra/rest/controllers"
 )
 
-func HandleUserRequests(r *gin.Engine) {
+func HandleAuthRequests(r *gin.Engine) {
 
-	userGroup := r.Group("/users")
+	userGroup := r.Group("/")
 	{
-		userGroup.POST("", controllers.CreateUser)
+		userGroup.POST("/login", controllers.Login)
 	}
 
 }
