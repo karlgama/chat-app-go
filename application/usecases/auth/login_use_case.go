@@ -2,16 +2,11 @@ package auth_use_cases
 
 import (
 	"errors"
-	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	user_use_cases "github.com/karlgama/chat-app-go.git/application/usecases/user"
-	"github.com/karlgama/chat-app-go.git/domain/entities"
 	security "github.com/karlgama/chat-app-go.git/infra/security/services"
 	"github.com/sirupsen/logrus"
 )
-
-var jwtKey = []byte("  ")
 
 type LoginInput struct {
 	Email    string `json:"email" binding:"required,email"`
@@ -37,21 +32,10 @@ func Login(input *LoginInput) (*LoginOutput, error) {
 		return nil, errors.New("email or password is incorrect")
 	}
 
-	expirationTime := time.Now().Add(5 * time.Minute)
-
-	claims := entities.Claims{
-		StandardClaims: jwt.StandardClaims{
-			Subject:   foundUser.Email,
-			ExpiresAt: expirationTime.Unix(),
-		},
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	tokenString, err := token.SignedString(jwtKey)
+	token, err := security.GenerateToken(foundUser)
 
 	if err != nil {
 		return nil, errors.New("could not generate token")
 	}
-	return &LoginOutput{Token: &tokenString}, nil
+	return &LoginOutput{Token: &token}, nil
 }
