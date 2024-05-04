@@ -7,7 +7,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	user_use_cases "github.com/karlgama/chat-app-go.git/application/usecases/user"
 	"github.com/karlgama/chat-app-go.git/domain/entities"
-	"github.com/karlgama/chat-app-go.git/infra/security"
+	security "github.com/karlgama/chat-app-go.git/infra/security/services"
 	"github.com/sirupsen/logrus"
 )
 

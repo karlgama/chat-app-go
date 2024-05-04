@@ -2,7 +2,7 @@ package user_use_cases
 
 import (
 	"github.com/karlgama/chat-app-go.git/domain/entities"
-	"github.com/karlgama/chat-app-go.git/infra/security"
+	security "github.com/karlgama/chat-app-go.git/infra/security/services"
 )
 
 type CreateUserInput struct {
