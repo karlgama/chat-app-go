@@ -5,7 +5,6 @@ import (
 
 	user_use_cases "github.com/karlgama/chat-app-go.git/application/usecases/user"
 	security "github.com/karlgama/chat-app-go.git/infra/security/services"
-	"github.com/sirupsen/logrus"
 )
 
 type LoginInput struct {
@@ -20,7 +19,6 @@ type LoginOutput struct {
 func Login(input *LoginInput) (*LoginOutput, error) {
 
 	foundUser := user_use_cases.FindUserByEmail(input.Email)
-	logrus.Info("founduser", foundUser)
 
 	if foundUser == nil {
 		return nil, errors.New("email or password is incorrect")

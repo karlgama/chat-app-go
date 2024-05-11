@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	use_cases "github.com/karlgama/chat-app-go.git/application/usecases/user"
+	user_use_cases "github.com/karlgama/chat-app-go.git/application/usecases/user"
 )
 
 type CreateUserOutput struct {
@@ -19,7 +19,7 @@ type CreateUserOutput struct {
 
 func CreateUser(c *gin.Context) {
 
-	var input use_cases.CreateUserInput
+	var input user_use_cases.CreateUserInput
 
 	if bindError := c.ShouldBindJSON(&input); bindError != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -28,7 +28,7 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	user, _ := use_cases.CreateUser(&input)
+	user, _ := user_use_cases.CreateUser(&input)
 
 	output := CreateUserOutput{
 		ID:        user.ID,

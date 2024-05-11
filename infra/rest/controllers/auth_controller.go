@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -9,7 +8,7 @@ import (
 )
 
 func Login(c *gin.Context) {
-
+	// TODO: Adicionar autenticação do google
 	var input auth_use_cases.LoginInput
 
 	if bindError := c.ShouldBindJSON(&input); bindError != nil {
@@ -20,8 +19,7 @@ func Login(c *gin.Context) {
 	}
 
 	token, _ := auth_use_cases.Login(&input)
-	fmt.Println("token->")
-	fmt.Println(token)
+
 	output := auth_use_cases.LoginOutput{
 		Token: token.Token,
 	}

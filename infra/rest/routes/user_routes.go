@@ -6,7 +6,6 @@ import (
 )
 
 func HandleUserRequests(r *gin.Engine) {
-
 	userGroup := r.Group("/users")
 	{
 		userGroup.POST("", controllers.CreateUser)

@@ -3,6 +3,7 @@ package user_use_cases
 import (
 	"github.com/karlgama/chat-app-go.git/domain/entities"
 	security "github.com/karlgama/chat-app-go.git/infra/security/services"
+	"github.com/sirupsen/logrus"
 )
 
 type CreateUserInput struct {
@@ -11,8 +12,12 @@ type CreateUserInput struct {
 	Password string `json:"password" binding:"required,gte=8"`
 }
 
+type CreateUserUseCase struct {
+}
+
 func CreateUser(input *CreateUserInput) (*entities.User, error) {
 	hashedPassword, err := security.HashPassword(input.Password)
+	logrus.Info("creating user")
 
 	if err != nil {
 		return nil, err
