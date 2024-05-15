@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	"log"
 
+	"github.com/joho/godotenv"
+	"github.com/karlgama/chat-app-go.git/infra/postgreSQL"
 	"github.com/karlgama/chat-app-go.git/infra/rest/routes"
 )
 
@@ -66,7 +69,16 @@ import (
 // 	reader(ws)
 // }
 
+func loadEnv() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+}
+
 func main() {
+	loadEnv()
+	postgreSQL.SetupDatabase()
 	fmt.Println("Chat App v0.01")
 	routes.SetupRoutes()
 }
