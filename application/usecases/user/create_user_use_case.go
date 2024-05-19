@@ -1,6 +1,7 @@
 package user_use_cases
 
 import (
+	"github.com/karlgama/chat-app-go.git/application/repositories"
 	"github.com/karlgama/chat-app-go.git/domain/entities"
 	security "github.com/karlgama/chat-app-go.git/infra/security/services"
 	"github.com/sirupsen/logrus"
@@ -13,9 +14,10 @@ type CreateUserInput struct {
 }
 
 type CreateUserUseCase struct {
+	repository repositories.UserRepository
 }
 
-func CreateUser(input *CreateUserInput) (*entities.User, error) {
+func (c *CreateUserUseCase) CreateUser(input *CreateUserInput) (*entities.User, error) {
 	hashedPassword, err := security.HashPassword(input.Password)
 	logrus.Info("creating user")
 
@@ -23,9 +25,21 @@ func CreateUser(input *CreateUserInput) (*entities.User, error) {
 		return nil, err
 	}
 
-	return entities.NewUser(
+	user := entities.NewUser(
 		input.Name,
 		input.Email,
 		hashedPassword,
-	), nil
+	)
+
+	savedUser, err := c.repository.Save(user)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return savedUser, nil
+}
+
+func NewCreateUserUseCase(repository repositories.UserRepository) *CreateUserUseCase {
+	return &CreateUserUseCase{repository: repository}
 }

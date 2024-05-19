@@ -18,6 +18,7 @@ type CreateUserOutput struct {
 }
 
 func CreateUser(c *gin.Context) {
+	useCase := ;
 
 	var input user_use_cases.CreateUserInput
 
@@ -31,7 +32,7 @@ func CreateUser(c *gin.Context) {
 	user, _ := user_use_cases.CreateUser(&input)
 
 	output := CreateUserOutput{
-		ID:        user.ID,
+		ID:        user.ExternalID,
 		Name:      user.Name,
 		Email:     user.Email,
 		CreatedAt: user.CreatedAt,
