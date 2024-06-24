@@ -9,11 +9,12 @@ func FindUserByEmail(email string) *entities.User {
 	hashedPassword, _ := security.HashPassword("12345678")
 
 	return &entities.User{
-		nil,
-		"",
-		email,
-		hashedPassword,
-		nil,
-		nil,
+		ID:         nil,
+		ExternalID: nil,
+		Name:       "name",
+		Email:      email,
+		Password:   hashedPassword,
+		CreatedAt:  nil,
+		UpdatedAt:  nil,
 	}
 }

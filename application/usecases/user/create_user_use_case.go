@@ -8,7 +8,7 @@ import (
 )
 
 type CreateUserInput struct {
-	Name     string `json:"name" binding:"required,gte=2,"`
+	Name     string `json:"name" binding:"required,gte=2"`
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required,gte=8"`
 }

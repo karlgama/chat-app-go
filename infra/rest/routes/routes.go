@@ -12,7 +12,7 @@ func SetupRoutes() {
 	r := gin.Default()
 	HandleUserRequests(r)
 	HandleAuthRequests(r)
-	HandleChatRequests(r)
+	// HandleChatRequests(r)
 	protectedRoutes := r.Group("/")
 	protectedRoutes.Use(security_middlewares.AuthenticationMiddleware())
 	{

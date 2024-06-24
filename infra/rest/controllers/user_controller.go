@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	user_use_cases "github.com/karlgama/chat-app-go.git/application/usecases/user"
+	"github.com/karlgama/chat-app-go.git/infra/rest/factories"
 )
 
 type CreateUserOutput struct {
@@ -18,7 +19,7 @@ type CreateUserOutput struct {
 }
 
 func CreateUser(c *gin.Context) {
-	useCase := ;
+	useCase := factories.CreateUserUseCase()
 
 	var input user_use_cases.CreateUserInput
 
@@ -29,7 +30,7 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	user, _ := user_use_cases.CreateUser(&input)
+	user, _ := useCase.CreateUser(&input)
 
 	output := CreateUserOutput{
 		ID:        user.ExternalID,
