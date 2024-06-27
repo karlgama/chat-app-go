@@ -6,5 +6,5 @@ import (
 )
 
 func CreateUserUseCase() *user_use_cases.CreateUserUseCase {
-	return user_use_cases.NewCreateUserUseCase(&postgre.UserPostgreRepository{})
+	return user_use_cases.NewCreateUserUseCase(&postgre.UserPostgresRepository{})
 }

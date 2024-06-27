@@ -6,9 +6,9 @@ import (
 	"github.com/karlgama/chat-app-go.git/infra/postgreSQL/models"
 )
 
-type UserPostgreRepository struct{}
+type UserPostgresRepository struct{}
 
-func (u *UserPostgreRepository) Save(user *entities.User) (*entities.User, error) {
+func (u *UserPostgresRepository) Save(user *entities.User) (*entities.User, error) {
 	model := models.UserModel{
 		ID:         nil,
 		ExternalID: user.ExternalID,
