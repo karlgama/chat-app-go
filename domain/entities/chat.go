@@ -6,9 +6,9 @@ import (
 	"github.com/google/uuid"
 )
 
-type chat struct {
+type Chat struct {
 	ID        uuid.UUID
-	Users     []User
+	Users     *[]User
 	Messages  []Message
 	CreatedAt time.Time
 	UpdatedAt time.Time
