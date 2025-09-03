@@ -1,0 +1,25 @@
+package constants
+
+const (
+	LogLoginAttempt             = "Login attempt"
+	LogLoginSuccessful          = "Login successful"
+	LogLoginFailed              = "Login failed"
+	LogInvalidCredentials       = "Login attempt with invalid credentials"
+	LogInvalidRequestBody       = "Invalid request body"
+	LogTokenGenerationFailed    = "Token generation failed"
+	LogUnknownLoginError        = "Unknown login error"
+	LogTokenIsNil               = "Token is nil after successful login"
+	LogUserCreated              = "User created successfully"
+	LogUserCreationFailed       = "User creation failed"
+	LogChatCreated              = "Chat created successfully"
+	LogChatCreationFailed       = "Chat creation failed"
+	LogDatabaseConnected        = "Connected to database"
+	LogDatabaseConnectionFailed = "Failed to connect to database"
+	LogMigrationStarted         = "Migration started"
+	LogMigrationCompleted       = "Migration completed"
+	LogMigrationFailed          = "Migration failed"
+	LogServerStarted            = "Server started"
+	LogServerStopped            = "Server stopped"
+	LogConfigLoaded             = "Configuration loaded"
+	LogLoggerConfigured         = "Logger configured"
+)

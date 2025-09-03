@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	auth_use_cases "github.com/karlgama/chat-app-go.git/application/usecases/auth"
+	"github.com/karlgama/chat-app-go.git/domain/constants"
 	"github.com/karlgama/chat-app-go.git/domain/entities"
 	"github.com/karlgama/chat-app-go.git/infra/utils"
 )
@@ -15,35 +16,35 @@ func handleLoginError(c *gin.Context, err error) bool {
 		return false
 	}
 
-	utils.SafeLogError(c, "Login failed", map[string]interface{}{
+	utils.SafeLogError(c, constants.LogLoginFailed, map[string]interface{}{
 		"error": err.Error(),
 	})
 
 	if errors.Is(err, entities.ErrInvalidCredentials) {
-		utils.SafeLogWarn(c, "Login attempt with invalid credentials", map[string]interface{}{
-			"reason": "invalid_credentials",
+		utils.SafeLogWarn(c, constants.LogInvalidCredentials, map[string]interface{}{
+			"reason": constants.ReasonInvalidCredentials,
 		})
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "Invalid email or password",
+			"error": constants.ErrInvalidCredentials,
 		})
 		return true
 	}
 
 	if errors.Is(err, entities.ErrTokenGeneration) {
-		utils.SafeLogError(c, "Token generation failed", map[string]interface{}{
-			"reason": "token_generation_failed",
+		utils.SafeLogError(c, constants.LogTokenGenerationFailed, map[string]interface{}{
+			"reason": constants.ReasonTokenGenerationFailed,
 		})
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Internal server error",
+			"error": constants.ErrInternalServer,
 		})
 		return true
 	}
 
-	utils.SafeLogError(c, "Unknown login error", map[string]interface{}{
-		"reason": "unknown_error",
+	utils.SafeLogError(c, constants.LogUnknownLoginError, map[string]interface{}{
+		"reason": constants.ReasonUnknownError,
 	})
 	c.JSON(http.StatusInternalServerError, gin.H{
-		"error": "Internal server error",
+		"error": constants.ErrInternalServer,
 	})
 	return true
 }
@@ -53,17 +54,17 @@ func Login(c *gin.Context) {
 	var input auth_use_cases.LoginInput
 
 	if bindError := c.ShouldBindJSON(&input); bindError != nil {
-		utils.SafeLogWarn(c, "Invalid request body", map[string]interface{}{
+		utils.SafeLogWarn(c, constants.LogInvalidRequestBody, map[string]interface{}{
 			"error": bindError.Error(),
 		})
 
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid request body",
+			"error": constants.ErrInvalidBody,
 		})
 		return
 	}
 
-	utils.SafeLogInfo(c, "Login attempt", map[string]interface{}{
+	utils.SafeLogInfo(c, constants.LogLoginAttempt, map[string]interface{}{
 		"email": input.Email,
 	})
 
@@ -74,16 +75,16 @@ func Login(c *gin.Context) {
 	}
 
 	if token == nil || token.Token == nil {
-		utils.SafeLogError(c, "Token is nil after successful login", map[string]interface{}{
-			"reason": "nil_token",
+		utils.SafeLogError(c, constants.LogTokenIsNil, map[string]interface{}{
+			"reason": constants.ReasonNilToken,
 		})
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Internal server error",
+			"error": constants.ErrInternalServer,
 		})
 		return
 	}
 
-	utils.SafeLogInfo(c, "Login successful", map[string]interface{}{
+	utils.SafeLogInfo(c, constants.LogLoginSuccessful, map[string]interface{}{
 		"email": input.Email,
 	})
 
