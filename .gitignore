@@ -1,1 +1,25 @@
+# Environment variables
 .env
+.env.local
+.env.development
+.env.production
+
+# Go binary
+main
+
+# Docker volumes
+postgres_data/
+pgadmin_data/
+
+# Logs
+*.log
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db

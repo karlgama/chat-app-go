@@ -14,11 +14,22 @@ func CreateChat(c *gin.Context) {
 
 	if bindError := c.ShouldBindJSON(&input); bindError != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": bindError.Error(),
+			"error": "Invalid request body",
 		})
 		return
 	}
 
-	output, err := useCase.CreateChat(input)
+	output, err := useCase.CreateChat(&input)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Internal server error",
+		})
+		return
+	}
 
+	c.JSON(http.StatusCreated, gin.H{
+		"id":         output.ID,
+		"created_at": output.CreatedAt,
+		"updated_at": output.UpdatedAt,
+	})
 }

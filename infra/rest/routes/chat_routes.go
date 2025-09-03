@@ -5,10 +5,9 @@ import (
 	"github.com/karlgama/chat-app-go.git/infra/rest/controllers"
 )
 
-func HandleChatRequests(r *gin.Engine) {
-	chatGroup := r.Group("/")
+func HandleChatRequests(r *gin.RouterGroup) {
+	chatGroup := r.Group("/chats")
 	{
-		chatGroup.POST("/chat", controllers.CreateChat)
-
+		chatGroup.POST("", controllers.CreateChat)
 	}
 }

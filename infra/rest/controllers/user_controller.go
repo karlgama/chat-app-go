@@ -25,7 +25,7 @@ func CreateUser(c *gin.Context) {
 
 	if bindError := c.ShouldBindJSON(&input); bindError != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": bindError.Error(),
+			"error": "Invalid request body",
 		})
 		return
 	}

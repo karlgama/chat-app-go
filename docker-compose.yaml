@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: chat-app-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-chat_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-chat_password}
+      POSTGRES_DB: ${DB_NAME:-chat_app_db}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - chat-network
+
+  # Uncomment the section below when you want to run the Go app in Docker
+  # chat-app:
+  #   build: .
+  #   container_name: chat-app-go
+  #   restart: unless-stopped
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     DB_HOST: postgres
+  #     DB_PORT: 5432
+  #     DB_USER: ${DB_USER:-chat_user}
+  #     DB_PASSWORD: ${DB_PASSWORD:-chat_password}
+  #     DB_NAME: ${DB_NAME:-chat_app_db}
+  #   depends_on:
+  #     - postgres
+  #   networks:
+  #     - chat-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  chat-network:
+    driver: bridge

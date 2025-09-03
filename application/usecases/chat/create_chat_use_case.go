@@ -10,7 +10,7 @@ import (
 )
 
 type CreateChatInput struct {
-	userIds *[]uuid.UUID
+	UserIds *[]uuid.UUID `json:"user_ids" binding:"required"`
 }
 
 type CreateChatUseCase struct {
@@ -18,13 +18,17 @@ type CreateChatUseCase struct {
 	repository            repositories.ChatRepository
 }
 
-func NewChatUseCase(findUsersByIDsUseCase *user_use_cases.FindUsersByIdsUseCase) *CreateChatUseCase {
-	return &CreateChatUseCase{findUsersByIDsUseCase: findUsersByIDsUseCase}
+func NewChatUseCase(repository repositories.ChatRepository, userRepository repositories.UserRepository) *CreateChatUseCase {
+	findUsersByIDsUseCase := user_use_cases.NewFindUsersByIdsUseCase(userRepository)
+	return &CreateChatUseCase{
+		findUsersByIDsUseCase: findUsersByIDsUseCase,
+		repository:            repository,
+	}
 }
 
 func (c *CreateChatUseCase) CreateChat(input *CreateChatInput) (*entities.Chat, error) {
 	log.Println("creating chat")
-	users, err := c.findUsersByIDsUseCase.FindUsersByIds(input.userIds)
+	users, err := c.findUsersByIDsUseCase.FindUsersByIds(input.UserIds)
 	if err != nil {
 		return nil, err
 	}

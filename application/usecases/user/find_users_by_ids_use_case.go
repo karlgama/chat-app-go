@@ -17,3 +17,7 @@ func (f *FindUsersByIdsUseCase) FindUsersByIds(ids *[]uuid.UUID) (*[]entities.Us
 	}
 	return users, nil
 }
+
+func NewFindUsersByIdsUseCase(repository repositories.UserRepository) *FindUsersByIdsUseCase {
+	return &FindUsersByIdsUseCase{repositories: repository}
+}

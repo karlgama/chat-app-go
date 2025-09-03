@@ -6,9 +6,12 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/karlgama/chat-app-go.git/domain/entities"
+	"github.com/karlgama/chat-app-go.git/infra/config"
 )
 
-var jwtKey = []byte("  ")
+func getJWTKey() []byte {
+	return []byte(config.AppSettings.JWT.Secret)
+}
 
 func GenerateToken(user *entities.User) (string, error) {
 	expirationTime := time.Now().Add(5 * time.Minute)
@@ -22,12 +25,12 @@ func GenerateToken(user *entities.User) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	return token.SignedString(jwtKey)
+	return token.SignedString(getJWTKey())
 }
 
 func VerifyToken(tokenString string) (jwt.MapClaims, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return jwtKey, nil
+		return getJWTKey(), nil
 	})
 
 	if err != nil {

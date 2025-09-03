@@ -3,10 +3,12 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
-	"github.com/joho/godotenv"
+	"github.com/karlgama/chat-app-go.git/infra/config"
 	"github.com/karlgama/chat-app-go.git/infra/postgreSQL"
 	"github.com/karlgama/chat-app-go.git/infra/rest/routes"
+	"github.com/karlgama/chat-app-go.git/pkg/migrate"
 )
 
 // var upgrader = websocket.Upgrader{
@@ -69,16 +71,88 @@ import (
 // 	reader(ws)
 // }
 
-func loadEnv() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
+func handleMigrationCommands() bool {
+	if len(os.Args) <= 1 {
+		return false
+	}
+
+	command := os.Args[1]
+
+	switch command {
+	case "migrate":
+		fmt.Println("Executando migrações...")
+		if err := migrate.RunMigrations(); err != nil {
+			fmt.Printf("Erro ao executar migrações: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Println("Migrações executadas com sucesso!")
+		return true
+	case "drop":
+		fmt.Println("Removendo todas as tabelas...")
+		if err := migrate.DropAllTables(); err != nil {
+			fmt.Printf("Erro ao remover tabelas: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Println("Tabelas removidas com sucesso!")
+		return true
+	case "reset":
+		fmt.Println("Resetando banco de dados...")
+		if err := migrate.ResetDatabase(); err != nil {
+			fmt.Printf("Erro ao resetar banco de dados: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Println("Banco de dados resetado com sucesso!")
+		return true
+	case "--help", "-h":
+		printHelp()
+		return true
+	default:
+		fmt.Printf("Comando desconhecido: %s\n", command)
+		printHelp()
+		return true
 	}
 }
 
 func main() {
-	loadEnv()
+	config.LoadConfig()
+	config.ConfigureLogger()
+
+	if handleMigrationCommands() {
+		return
+	}
+
+	if config.IsDevelopment() || config.IsLocal() {
+		postgreSQL.CreateDatabaseIfNotExists()
+	}
+
 	postgreSQL.SetupDatabase()
-	fmt.Println("Chat App v0.01")
+
+	if config.IsDevelopment() || config.IsLocal() {
+		postgreSQL.AutoMigrate()
+		postgreSQL.RunCustomMigrations()
+	}
+
+	log.Printf("Chat App v0.01 - Ambiente: %s", config.AppSettings.App.Environment)
+	fmt.Printf("Servidor iniciando na porta %s\n", config.AppSettings.App.Port)
+
 	routes.SetupRoutes()
+}
+
+func printHelp() {
+	fmt.Println("Chat App - Sistema de Migrações")
+	fmt.Println("")
+	fmt.Println("Uso:")
+	fmt.Println("  go run cmd/main.go [comando]")
+	fmt.Println("")
+	fmt.Println("Comandos disponíveis:")
+	fmt.Println("  migrate    Executa todas as migrações pendentes")
+	fmt.Println("  drop       Remove todas as tabelas do banco")
+	fmt.Println("  reset      Reseta o banco (drop + migrate)")
+	fmt.Println("  --help     Mostra esta ajuda")
+	fmt.Println("")
+	fmt.Println("Exemplos:")
+	fmt.Println("  go run cmd/main.go migrate")
+	fmt.Println("  go run cmd/main.go reset")
+	fmt.Println("")
+	fmt.Println("Sem argumentos: inicia o servidor web")
 }
